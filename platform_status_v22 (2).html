@@ -1,0 +1,1572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Platform Status</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f5f4f1;
+      --surface: #ffffff;
+      --surface-2: #faf9f7;
+      --surface-3: #f0eeeb;
+      --border: #e8e5e0;
+      --border-hover: #d0ccc6;
+      --text: #1a1916;
+      --text-soft: #4a4744;
+      --text-muted: #928e89;
+      --green: #16803c;
+      --green-bg: #f0fdf4;
+      --green-border: #bbf7d0;
+      --amber: #b45309;
+      --amber-bg: #fffbeb;
+      --amber-border: #fde68a;
+      --red: #be123c;
+      --red-bg: #fff1f2;
+      --red-border: #fecdd3;
+      --accent: #2563eb;
+      --accent-bg: #eff6ff;
+      --accent-border: #bfdbfe;
+      --neutral: #6b7280;
+      --neutral-bg: #f3f4f6;
+      --neutral-border: #d1d5db;
+      --blue: #2563eb;
+      --blue-bg: #eff6ff;
+      --blue-border: #bfdbfe;
+      --radius: 8px;
+      --radius-sm: 5px;
+      --nav-h: 52px;
+      --shadow-sm: 0 1px 2px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+      --shadow: 0 3px 12px rgba(0,0,0,0.07), 0 1px 3px rgba(0,0,0,0.04);
+      --shadow-lg: 0 16px 48px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.06);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; font-size: 13px; line-height: 1.5; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+    button, input, textarea, select { font: inherit; }
+    button { cursor: pointer; }
+
+    /* NAV */
+    .topnav { height: var(--nav-h); background: var(--surface); border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; padding: 0 24px; position: sticky; top: 0; z-index: 50; gap: 16px; box-shadow: var(--shadow-sm); }
+    .nav-brand { display: flex; align-items: center; gap: 9px; font-weight: 600; font-size: 14px; color: var(--text); letter-spacing: -0.02em; flex-shrink: 0; }
+    .brand-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); flex-shrink: 0; transition: background 0.3s; }
+    .brand-dot.limited { background: var(--amber); }
+    .brand-dot.down { background: var(--red); }
+    .nav-tabs { display: flex; align-items: center; gap: 2px; }
+    .nav-item { border: 0; background: transparent; color: var(--text-muted); height: 34px; padding: 0 13px; border-radius: var(--radius-sm); font-weight: 500; font-size: 13px; transition: all 0.12s; display: flex; align-items: center; gap: 6px; }
+    .nav-item:hover { color: var(--text-soft); background: var(--surface-3); }
+    .nav-item.active { color: var(--text); background: var(--surface-3); font-weight: 600; }
+    .nav-right { display: flex; align-items: center; gap: 7px; flex-shrink: 0; }
+
+    /* BUTTONS */
+    .btn { height: 30px; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--surface); color: var(--text-soft); padding: 0 10px; display: inline-flex; align-items: center; justify-content: center; gap: 5px; font-weight: 500; font-size: 12px; transition: all 0.12s; white-space: nowrap; box-shadow: var(--shadow-sm); }
+    .btn:hover { border-color: var(--border-hover); color: var(--text); background: var(--surface-2); }
+    .btn-primary { background: var(--text); color: #fff; border-color: var(--text); box-shadow: none; }
+    .btn-primary:hover { background: #2d2b28; border-color: #2d2b28; color: #fff; }
+    .btn-danger { color: var(--red); border-color: var(--red-border); background: var(--red-bg); box-shadow: none; }
+    .btn-danger:hover { background: #ffe0e5; border-color: #f9a8b8; }
+    .btn-ghost { border-color: transparent; background: transparent; color: var(--text-muted); box-shadow: none; }
+    .btn-ghost:hover { border-color: var(--border); background: var(--surface-3); color: var(--text); }
+    .btn-sm { height: 24px; font-size: 11px; padding: 0 8px; }
+    .button-row { display: flex; align-items: center; gap: 6px; }
+
+    /* DEMO PILL */
+    .demo-pill { height: 34px; border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0 11px; display: flex; align-items: center; gap: 7px; background: var(--surface); font-size: 12px; color: var(--text-muted); box-shadow: var(--shadow-sm); }
+    .demo-pill strong { font-weight: 600; font-size: 12px; color: var(--text-soft); }
+
+    /* BELL */
+    .bell { position: relative; width: 34px; height: 34px; display: grid; place-items: center; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--surface); transition: all 0.12s; box-shadow: var(--shadow-sm); }
+    .bell:hover, .bell.active { border-color: var(--border-hover); background: var(--surface-3); }
+    .bell-badge { position: absolute; top: -4px; right: -4px; background: var(--red); color: #fff; min-width: 16px; height: 16px; border-radius: 999px; font-size: 9px; font-weight: 700; display: grid; place-items: center; border: 2px solid var(--bg); }
+
+    /* NOTIFICATION PANEL */
+    .notification-panel { position: absolute; top: calc(var(--nav-h) + 8px); right: 24px; width: 780px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-lg); overflow: hidden; z-index: 100; }
+    .notification-top { padding: 14px 16px; display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; border-bottom: 1px solid var(--border); background: var(--surface-2); }
+    .notification-label { color: var(--text-muted); text-transform: uppercase; letter-spacing: .07em; font-size: 10px; font-weight: 600; margin-bottom: 5px; }
+    .notification-status { font-size: 14px; font-weight: 700; }
+    .notification-status.operational { color: var(--green); }
+    .notification-status.limited { color: var(--amber); }
+    .notification-status.outage { color: var(--red); }
+    .link-btn { border: 0; background: transparent; color: var(--text-muted); font-weight: 500; font-size: 12px; padding: 0; white-space: nowrap; transition: color 0.12s; }
+    .link-btn:hover { color: var(--text); }
+    .notification-announcement { padding: 10px 16px; border-bottom: 1px solid var(--border); }
+    .notification-ann-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; }
+    .notification-ann-label.outage { color: var(--red); }
+    .notification-ann-label.limited { color: var(--amber); }
+    .notification-ann-label.operational { color: var(--green); }
+    .notification-announcement p { margin-top: 4px; font-size: 12px; color: var(--text-soft); line-height: 1.5; }
+
+    /* ALERT TABLE inside notification panel */
+    .notif-section-head { display: flex; justify-content: space-between; align-items: center; padding: 10px 16px 8px; }
+    .notif-section-head .notification-label { margin: 0; }
+    .notif-unread-badge { font-size: 10px; font-weight: 700; color: var(--red); background: var(--red-bg); border: 1px solid var(--red-border); border-radius: 10px; padding: 1px 7px; }
+    .alert-table-wrap { overflow-x: auto; max-height: 320px; overflow-y: auto; }
+    .alert-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    .alert-table th { padding: 8px 12px; border-bottom: 1px solid var(--border); text-align: left; color: var(--text-muted); font-size: 10px; text-transform: uppercase; font-weight: 600; background: var(--surface-3); letter-spacing: .06em; position: sticky; top: 0; z-index: 1; white-space: nowrap; }
+    .alert-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; color: var(--text-soft); line-height: 1.4; }
+    .alert-table tr:last-child td { border-bottom: 0; }
+    .alert-table tbody tr { transition: background 0.1s; }
+    .alert-table tbody tr:hover td { background: var(--surface-2); }
+    .alert-table tbody tr.unread td { background: var(--accent-bg); }
+    .alert-table tbody tr.unread:hover td { background: #e4efff; }
+    .error-icon { width: 18px; height: 18px; border-radius: 50%; background: var(--red); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex-shrink: 0; }
+    .warn-icon { width: 18px; height: 18px; border-radius: 50%; background: var(--amber); color: #fff; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; flex-shrink: 0; }
+    .error-level-tag { display: inline-flex; align-items: center; height: 18px; border-radius: 3px; padding: 0 6px; font-size: 10px; font-weight: 700; letter-spacing: .04em; }
+    .error-level-tag.error { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+    .error-level-tag.warning { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border); }
+    .ack-toggle { width: 32px; height: 18px; border-radius: 999px; background: var(--border); border: 1px solid var(--border-hover); position: relative; cursor: pointer; flex-shrink: 0; transition: background 0.2s; display: inline-block; }
+    .ack-toggle:after { content: ""; position: absolute; width: 14px; height: 14px; border-radius: 999px; background: #fff; top: 1px; left: 1px; box-shadow: 0 1px 3px rgba(0,0,0,0.15); transition: all 0.2s; }
+    .ack-toggle.acked { background: var(--accent); border-color: var(--accent); }
+    .ack-toggle.acked:after { left: 15px; }
+    .notification-footer { width: 100%; height: 40px; border: 0; border-top: 1px solid var(--border); background: var(--surface-2); color: var(--text-muted); font-weight: 500; font-size: 13px; transition: all 0.12s; }
+    .notification-footer:hover { background: var(--surface-3); color: var(--text); }
+
+    /* PAGES */
+    .page { display: none; padding: 20px 24px; max-width: 2282px; animation: fadeUp 0.18s ease; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+    .page.active { display: block; }
+    .page-header { margin-bottom: 16px; }
+    .page-title { font-size: 18px; font-weight: 700; letter-spacing: -0.03em; color: var(--text); margin-bottom: 2px; }
+    .page-sub { color: var(--text-muted); font-size: 12px; }
+    h2 { font-size: 13px; font-weight: 600; letter-spacing: -0.01em; color: var(--text); margin-bottom: 2px; }
+
+    /* BANNER */
+    .banner { min-height: 36px; border-radius: var(--radius); padding: 7px 12px; display: flex; align-items: center; justify-content: space-between; gap: 16px; font-size: 12px; font-weight: 500; margin-bottom: 14px; border: 1px solid; }
+    .banner { background: var(--red-bg); color: var(--red); border-color: var(--red-border); }
+    .banner.limited { background: var(--amber-bg); color: var(--amber); border-color: var(--amber-border); }
+    .banner.working { background: var(--green-bg); color: var(--green); border-color: var(--green-border); }
+    .banner-left { display: flex; align-items: center; gap: 8px; }
+    .banner-actions { display: flex; align-items: center; gap: 12px; font-size: 11px; opacity: 0.7; flex-shrink: 0; }
+    .banner-actions span { cursor: pointer; transition: opacity 0.12s; }
+    .banner-actions span:hover { opacity: 1; }
+
+    /* SUMMARY CARD */
+    .summary-card { border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); padding: 12px 16px; display: flex; align-items: center; gap: 12px; margin-bottom: 14px; box-shadow: var(--shadow-sm); }
+    .summary-indicator { width: 32px; height: 32px; border-radius: 50%; display: grid; place-items: center; font-size: 13px; flex-shrink: 0; font-weight: 700; }
+    .summary-indicator.down { background: var(--red-bg); color: var(--red); border: 1px solid var(--red-border); }
+    .summary-indicator.limited { background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border); }
+    .summary-indicator.working { background: var(--green-bg); color: var(--green); border: 1px solid var(--green-border); }
+    .summary-label { font-size: 13px; font-weight: 700; margin-bottom: 1px; }
+    .summary-label.down { color: var(--red); }
+    .summary-label.limited { color: var(--amber); }
+    .summary-label.working { color: var(--green); }
+    .summary-desc { color: var(--text-soft); font-size: 12px; }
+
+    /* SECTION HEAD */
+    .section-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin: 14px 0 8px; }
+    .section-head p { margin-top: 2px; color: var(--text-muted); font-size: 12px; }
+
+    /* CATEGORY LIST (public status) */
+    .category-list { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; background: var(--surface); box-shadow: var(--shadow-sm); }
+    .category-card { border-bottom: 1px solid var(--border); }
+    .category-card:last-child { border-bottom: 0; }
+    .category-top { min-height: 42px; display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 14px; padding: 0 14px; transition: background 0.12s; }
+    .category-top:hover { background: var(--surface-2); }
+    .category-title-wrap { display: flex; align-items: center; gap: 8px; font-weight: 500; font-size: 12px; }
+    .status-label { font-weight: 600; font-size: 11px; }
+    .status-label.working { color: var(--green); }
+    .status-label.limited { color: var(--amber); }
+    .status-label.down { color: var(--red); }
+    .status-label.neutral { color: var(--neutral); }
+    .status-label.blue { color: var(--blue); }
+    .category-details { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; border-top: 1px solid var(--border); padding: 10px 14px; background: var(--surface-2); }
+    .collapsed .category-details { display: none; }
+    .detail-label { color: var(--text-muted); font-size: 9px; text-transform: uppercase; font-weight: 600; margin-bottom: 2px; letter-spacing: .06em; }
+    .detail-value { font-size: 11px; color: var(--text-soft); }
+
+    /* STATUS DOT */
+    .status-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+    .status-dot.working { background: var(--green); }
+    .status-dot.limited { background: var(--amber); }
+    .status-dot.down { background: var(--red); animation: blink 1.6s infinite; }
+    @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+
+    /* TABLE */
+    .table-card { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; background: var(--surface); box-shadow: var(--shadow-sm); }
+    table { width: 100%; border-collapse: collapse; font-size: 11px; }
+    th { padding: 8px 12px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: middle; color: var(--text-muted); font-size: 9px; text-transform: uppercase; font-weight: 600; background: var(--surface-2); letter-spacing: .06em; }
+    td { padding: 9px 12px; border-bottom: 1px solid var(--border); text-align: left; vertical-align: top; color: var(--text-soft); }
+    td strong { color: var(--text); font-weight: 500; }
+    tr:last-child td { border-bottom: 0; }
+    tbody tr:hover td { background: var(--surface-2); }
+
+    /* TAG */
+    .tag { display: inline-flex; align-items: center; height: 18px; border-radius: 3px; padding: 0 6px; font-size: 9px; font-weight: 600; margin-right: 3px; letter-spacing: .02em; border: 1px solid var(--border); background: var(--surface-3); color: var(--text-muted); }
+    .tag.down { background: var(--red-bg); color: var(--red); border-color: var(--red-border); }
+    .tag.limited { background: var(--amber-bg); color: var(--amber); border-color: var(--amber-border); }
+    .tag.working { background: var(--green-bg); color: var(--green); border-color: var(--green-border); }
+    .tag.neutral { background: var(--neutral-bg); color: var(--neutral); border-color: var(--neutral-border); }
+    .tag.blue { background: var(--blue-bg); color: var(--blue); border-color: var(--blue-border); }
+    .tag.open { background: var(--amber-bg); color: var(--amber); border-color: var(--amber-border); }
+    .tag.closed { background: var(--green-bg); color: var(--green); border-color: var(--green-border); }
+
+    /* MONO CODE */
+    .mono { font-family: 'Inter', monospace; font-size: 10px; font-weight: 600; color: var(--text-soft); background: var(--surface-3); border: 1px solid var(--border); border-radius: 3px; padding: 1px 5px; letter-spacing: .03em; }
+
+    /* TABS */
+    .tabs { display: inline-flex; background: var(--surface-3); padding: 2px; border-radius: var(--radius-sm); gap: 2px; margin: 0 0 14px; border: 1px solid var(--border); }
+    .tab { border: 0; background: transparent; height: 26px; padding: 0 11px; border-radius: 3px; font-weight: 500; font-size: 11px; color: var(--text-muted); transition: all 0.12s; display: flex; align-items: center; gap: 4px; }
+    .tab:hover { color: var(--text-soft); }
+    .tab.active { background: var(--surface); color: var(--text); font-weight: 600; box-shadow: var(--shadow-sm); }
+
+    /* PANEL */
+    .panel { border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); padding: 14px; margin-bottom: 16px; box-shadow: var(--shadow-sm); }
+    .form-grid { display: grid; gap: 11px; }
+    .form-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 11px; }
+    .form-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 11px; }
+    .field { display: grid; gap: 4px; }
+    label { font-weight: 600; font-size: 10px; color: var(--text-muted); letter-spacing: .04em; text-transform: uppercase; }
+    input, textarea, select { width: 100%; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); color: var(--text); min-height: 32px; padding: 6px 10px; outline: none; transition: all 0.12s; font-size: 12px; font-family: 'Inter', sans-serif; }
+    textarea { min-height: 68px; resize: vertical; line-height: 1.5; }
+    input:focus, textarea:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-bg); }
+    input:disabled, textarea:disabled, select:disabled { background: var(--surface-2); color: var(--text-muted); cursor: not-allowed; }
+
+    /* SWITCH ROW */
+    .switch-row { border: 1px solid var(--border); border-radius: var(--radius-sm); min-height: 48px; padding: 0 12px; display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--surface-2); }
+    .switch-row-label { font-weight: 600; font-size: 12px; color: var(--text); margin-bottom: 1px; }
+    .switch-row-sub { color: var(--text-muted); font-size: 11px; }
+    .switch { width: 32px; height: 18px; border-radius: 999px; background: var(--accent); position: relative; flex-shrink: 0; }
+    .switch:after { content: ""; position: absolute; width: 14px; height: 14px; border-radius: 999px; background: #fff; top: 2px; right: 2px; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+
+    /* ARCHIVED SECTION */
+    .archived-section { margin-top: 20px; }
+    .archived-toggle { display: flex; align-items: center; gap: 8px; background: none; border: none; color: var(--text-muted); font-size: 12px; font-weight: 600; padding: 6px 2px; cursor: pointer; transition: color 0.12s; width: 100%; text-align: left; }
+    .archived-toggle:hover { color: var(--text-soft); }
+    .archived-toggle-icon { transition: transform 0.18s; font-size: 10px; display: inline-block; }
+    .archived-toggle.open .archived-toggle-icon { transform: rotate(90deg); }
+    .archived-badge { background: var(--surface-3); border: 1px solid var(--border); border-radius: 10px; padding: 1px 7px; font-size: 11px; color: var(--text-muted); font-weight: 600; }
+    .archived-list { display: none; grid-template-columns: 1fr; gap: 8px; margin-top: 10px; }
+    .archived-list.open { display: grid; }
+    .archived-card { border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface-2); padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; gap: 16px; opacity: 0.75; }
+    .archived-card-name { font-size: 13px; font-weight: 500; color: var(--text-muted); display: flex; align-items: center; gap: 8px; text-decoration: line-through; text-decoration-color: var(--border-hover); }
+    .archived-card-meta { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+    .archived-actions { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+
+    /* MODALS */
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(20,18,15,0.45); backdrop-filter: blur(3px); display: none; align-items: center; justify-content: center; padding: 20px; z-index: 200; }
+    .modal-backdrop.active { display: flex; }
+    .modal { width: min(580px, 100%); max-height: 90vh; overflow: auto; background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow-lg); border: 1px solid var(--border); }
+    .modal-head { padding: 16px 18px 12px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+    .modal-head h2 { margin: 0; font-size: 14px; }
+    .modal-body { padding: 16px 18px; }
+    .modal-foot { border-top: 1px solid var(--border); padding: 12px 18px; display: flex; justify-content: flex-end; gap: 7px; background: var(--surface-2); position: sticky; bottom: 0; }
+
+    /* ADMIN INCIDENT HISTORY */
+    .inc-group { margin-bottom: 28px; }
+    .inc-group-header { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; padding-bottom: 8px; border-bottom: 2px solid var(--border); }
+    .inc-group-title { font-size: 13px; font-weight: 700; color: var(--text); }
+    .inc-event { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; background: var(--surface); box-shadow: var(--shadow-sm); margin-bottom: 12px; }
+    .inc-event-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px; background: var(--surface-2); border-bottom: 1px solid var(--border); }
+    .inc-event-id { display: flex; align-items: center; gap: 8px; }
+    .inc-event-meta { font-size: 11px; color: var(--text-muted); }
+    .inc-status-trail { display: grid; gap: 0; }
+    .inc-status-row { display: grid; grid-template-columns: 90px 110px 1fr 130px 140px 140px; gap: 12px; align-items: start; padding: 11px 16px; border-bottom: 1px solid var(--border); font-size: 12px; }
+    .inc-status-row:last-child { border-bottom: 0; }
+    .inc-status-row.close-row { background: var(--green-bg); }
+    .inc-trail-head { display: grid; grid-template-columns: 90px 110px 1fr 130px 140px 140px; gap: 12px; padding: 7px 16px; background: var(--surface-3); border-bottom: 1px solid var(--border); }
+    .inc-trail-head span { font-size: 10px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: .06em; }
+    .admin-notes-cell { background: var(--amber-bg); border-radius: 4px; padding: 4px 7px; font-size: 11px; color: var(--amber); border: 1px solid var(--amber-border); margin-top: 3px; }
+    .admin-only-badge { display: inline-flex; align-items: center; height: 16px; border-radius: 3px; padding: 0 5px; font-size: 9px; font-weight: 700; background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-border); letter-spacing: .03em; vertical-align: middle; margin-left: 4px; }
+
+    /* MISC */
+    .timestamp { font-size: 11px; color: var(--text-muted); }
+    .hidden { display: none !important; }
+    .dash-placeholder { border: 1px dashed var(--border); border-radius: var(--radius); padding: 56px 32px; text-align: center; color: var(--text-muted); font-size: 13px; background: var(--surface); }
+    .dash-placeholder-icon { font-size: 28px; margin-bottom: 10px; opacity: 0.25; }
+    .helper-text { color: var(--text-muted); font-size: 11px; line-height: 1.6; }
+    #scenarioSelect { min-height: 34px; height: 34px; padding: 0 10px; width: auto; min-width: 0; }
+    .divider { height: 1px; background: var(--border); margin: 18px 0; }
+    .section-label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 12px; }
+
+    @media (max-width: 860px) {
+      .topnav { padding: 0 14px; flex-wrap: wrap; height: auto; min-height: var(--nav-h); padding-top: 10px; padding-bottom: 10px; }
+      .page { padding: 18px 14px; }
+      .notification-panel { right: 14px; left: 14px; width: auto; }
+      .nav-tabs { order: 3; width: 100%; }
+      .form-row-2, .form-row-3, .inc-status-row, .inc-trail-head { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="topnav">
+  <div class="nav-brand">
+    <div class="brand-dot" id="brandDot"></div>
+    Platform Status
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-item active" data-page="dashboard">
+      <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6.2" height="6.2" rx="1.5" fill="currentColor" opacity=".5"/><rect x="8.8" y="1" width="6.2" height="6.2" rx="1.5" fill="currentColor"/><rect x="1" y="8.8" width="6.2" height="6.2" rx="1.5" fill="currentColor"/><rect x="8.8" y="8.8" width="6.2" height="6.2" rx="1.5" fill="currentColor" opacity=".5"/></svg>
+      Dashboard
+    </button>
+    <button class="nav-item" data-page="status">
+      <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.5"/><path d="M8 4.5v4l2.5 1.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Platform Status
+    </button>
+    <button class="nav-item" data-page="admin">
+      <svg width="12" height="12" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.5"/><path d="M8 1.5v2M8 12.5v2M1.5 8h2M12.5 8h2M3.4 3.4l1.4 1.4M11.2 11.2l1.4 1.4M3.4 12.6l1.4-1.4M11.2 4.8l1.4-1.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      Admin
+    </button>
+  </div>
+  <div class="nav-right">
+    <div class="demo-pill">Demo: <strong id="demoText">—</strong></div>
+    <select id="scenarioSelect" class="btn" onchange="switchScenario(this.value)"></select>
+    <button class="btn" onclick="toggleRotate()">
+      <svg width="11" height="11" viewBox="0 0 16 16" fill="none"><polygon points="3,1 15,8 3,15" fill="currentColor"/></svg>
+      <span id="rotateText">Auto Rotate</span>
+    </button>
+    <button class="bell" onclick="toggleNotifications()" aria-label="Notifications">
+      <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><path d="M8 1.5A4.5 4.5 0 003.5 6v3.5L2 11h12l-1.5-1.5V6A4.5 4.5 0 008 1.5z" stroke="currentColor" stroke-width="1.4"/><path d="M6.5 12.5a1.5 1.5 0 003 0" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+      <span class="bell-badge">2</span>
+    </button>
+    <div id="notificationPanel" class="notification-panel hidden">
+      <!-- Platform Status row -->
+      <div class="notification-top">
+        <div>
+          <div class="notification-label">Platform Status</div>
+          <div id="notificationStatus" class="notification-status outage">⊗ Not Operational</div>
+        </div>
+        <button class="link-btn" onclick="showPage('status'); toggleNotifications(false);">View Status →</button>
+      </div>
+      <!-- System Announcement -->
+      <div id="notificationAnnouncement" class="notification-announcement">
+        <div id="notifAnnLabel" class="notification-ann-label outage">⚑ System Announcement</div>
+        <p id="notifAnnText">Platform is currently unavailable. Our engineering team is working to restore services as quickly as possible.</p>
+      </div>
+      <!-- Alerts section head -->
+      <div class="notif-section-head">
+        <div class="notification-label">Recent Alerts</div>
+        <span class="notif-unread-badge">2 unread</span>
+      </div>
+      <!-- Alert table -->
+      <div class="alert-table-wrap">
+        <table class="alert-table">
+          <thead>
+            <tr>
+              <th></th>
+              <th>Site Name</th>
+              <th>Device Category</th>
+              <th>Component</th>
+              <th>Value</th>
+              <th>Error Level</th>
+              <th>Issue</th>
+              <th>Open</th>
+              <th>Acknowledge</th>
+            </tr>
+          </thead>
+          <tbody id="alertTableBody">
+            <tr class="unread">
+              <td><span class="error-icon">✕</span></td>
+              <td><strong>Allwire 484kW Central</strong></td>
+              <td>PV System Inverter</td>
+              <td>AE333NX INV</td>
+              <td>0 kW</td>
+              <td><span class="error-level-tag error">ERROR</span></td>
+              <td>Fan is not running fast enough.</td>
+              <td style="white-space:nowrap;">5/6/2026<br>09:00 AM</td>
+              <td style="text-align:center;"><span class="ack-toggle" onclick="this.classList.toggle('acked')"></span></td>
+            </tr>
+            <tr class="unread">
+              <td><span class="error-icon">✕</span></td>
+              <td><strong>Live Oak Farms #14</strong></td>
+              <td>PV System Inverter</td>
+              <td>AE 250NX INV</td>
+              <td>—</td>
+              <td><span class="error-level-tag error">ERROR</span></td>
+              <td>The unit has cycled on and off too many times in a short period. There might be something wrong with the unit or the utility supply.</td>
+              <td style="white-space:nowrap;">5/6/2026<br>08:45 AM</td>
+              <td style="text-align:center;"><span class="ack-toggle" onclick="this.classList.toggle('acked')"></span></td>
+            </tr>
+            <tr>
+              <td><span class="warn-icon">!</span></td>
+              <td><strong>Costco - Douglas County (#468)</strong></td>
+              <td>PV System Inverter</td>
+              <td>AE 500NX Inverter</td>
+              <td>0 kW</td>
+              <td><span class="error-level-tag warning">WARNING</span></td>
+              <td>The PV Tie contactor is likely to be welded closed and unable to open. Caution is required when dealing with this situation.</td>
+              <td style="white-space:nowrap;">5/6/2026<br>09:00 AM</td>
+              <td style="text-align:center;"><span class="ack-toggle acked" onclick="this.classList.toggle('acked')"></span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <button class="notification-footer">View All Alerts →</button>
+    </div>
+  </div>
+</header>
+
+<main>
+  <!-- DASHBOARD -->
+  <section id="dashboard" class="page active">
+    <div class="page-header">
+      <div class="page-title">Dashboard</div>
+      <div class="page-sub">Overview of your platform health and activity</div>
+    </div>
+    <div id="globalBanner" class="banner">
+      <div class="banner-left">
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor" stroke-width="1.5"/><path d="M8 7v5M8 5v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <span id="bannerMessage">Platform is currently unavailable.</span>
+      </div>
+      <div class="banner-actions">
+        <span onclick="showPage('status')">View Status →</span>
+        <span onclick="hideBanner()">✕</span>
+      </div>
+    </div>
+    <div class="dash-placeholder">
+      <div class="dash-placeholder-icon">▦</div>
+      Dashboard content will appear here
+    </div>
+  </section>
+
+  <!-- PLATFORM STATUS PAGE (customer-facing) -->
+  <section id="status" class="page">
+    <div class="section-head" style="margin-top:0; margin-bottom:18px;">
+      <div class="page-title" style="margin-bottom:0;">Platform Status</div>
+      <div class="timestamp">Updated <span id="lastUpdated"></span></div>
+    </div>
+    <div class="summary-card">
+      <div id="summaryIcon" class="summary-indicator down">⊗</div>
+      <div>
+        <div id="summaryTitle" class="summary-label down">Not Operational</div>
+        <div id="summaryText" class="summary-desc">One or more platform features are currently experiencing issues.</div>
+      </div>
+    </div>
+    <div class="section-head"><h2>Feature Status</h2></div>
+    <div id="featureStatusList" class="category-list"></div>
+    <div class="section-head"><h2>Incident History</h2></div>
+    <div id="publicIncidentContainer"></div>
+  </section>
+
+  <!-- ADMIN PAGE -->
+  <section id="admin" class="page">
+    <div class="page-header">
+      <div class="page-title">Admin</div>
+      <div class="page-sub">Manage announcements, events, and incident history</div>
+    </div>
+    <div class="tabs">
+      <button class="tab active" data-admin-tab="announcements">Announcements</button>
+      <button class="tab" data-admin-tab="management">Status Management</button>
+      <button class="tab" data-admin-tab="incidents">Incident History</button>
+    </div>
+
+    <!-- ANNOUNCEMENTS TAB -->
+    <div id="announcementsTab" class="admin-tab">
+      <div class="section-head" style="margin-top:0;">
+        <div><h2>System Announcement Banner</h2><p>Configure the global banner shown across all pages</p></div>
+      </div>
+      <div class="panel">
+        <div class="form-grid">
+          <div class="field"><label>Message</label><textarea id="adminBannerMessage">Platform is currently unavailable. Our engineering team is working to restore services as quickly as possible.</textarea></div>
+          <div class="form-row-2">
+            <div class="field"><label>Severity</label><select id="adminBannerSeverity"></select></div>
+            <div class="switch-row">
+              <div><div class="switch-row-label">Enable Banner</div><div class="switch-row-sub">Show across all pages</div></div>
+              <div class="switch"></div>
+            </div>
+          </div>
+          <div class="button-row">
+            <button class="btn btn-primary" onclick="saveBanner()">Save Banner</button>
+            <button class="btn" onclick="clearBanner()">Clear Banner</button>
+          </div>
+        </div>
+      </div>
+      <div class="section-head">
+        <div><h2>Email Announcement</h2><p>Send email notifications to all platform users</p></div>
+      </div>
+      <div class="panel">
+        <div class="form-grid">
+          <div class="field"><label>Subject</label><input placeholder="Enter email subject…" /></div>
+          <div class="field"><label>Message</label><textarea placeholder="Enter the email message…"></textarea></div>
+          <div><button class="btn" disabled style="opacity:.4;">Send Email</button></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STATUS MANAGEMENT TAB -->
+    <div id="managementTab" class="admin-tab hidden">
+      <div class="section-head" style="margin-top:0;">
+        <div><h2>Status Management</h2><p>Add events, manage open events, and close resolved events.</p></div>
+        <div class="button-row">
+          <button class="btn btn-primary" onclick="openModal('addEventModal')">+ Add Event</button>
+          <button class="btn" onclick="openModal('manageEventModal')">Update Event</button>
+          <button class="btn btn-danger" onclick="openBulkCloseModal()" style="border-style:dashed;">Close Events</button>
+          <button class="btn" onclick="openModal('categoryModal')">+ Add Category</button>
+        </div>
+      </div>
+
+      <!-- Open events summary -->
+      <div id="openEventsSummary"></div>
+
+      <!-- Category status list -->
+      <div class="section-head" style="margin-top: 24px;">
+        <div><h2>Category Status</h2><p>Current status per category based on latest events</p></div>
+      </div>
+      <div id="adminStatusList" class="admin-status-list" style="display:grid; gap:10px;"></div>
+    </div>
+
+    <!-- INCIDENT HISTORY TAB (admin) -->
+    <div id="incidentsTab" class="admin-tab hidden">
+      <div class="section-head" style="margin-top:0;">
+        <div><h2>Incident History</h2><p>Full event trail grouped by category. Admin notes are only visible here.</p></div>
+      </div>
+      <div id="adminIncidentContainer"></div>
+    </div>
+  </section>
+</main>
+
+<!-- ADD EVENT MODAL -->
+<div id="addEventModal" class="modal-backdrop">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>Add Event</h2>
+      <button class="btn-ghost btn-sm" onclick="closeModal('addEventModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-row-2">
+          <div class="field">
+            <label>Event Number</label>
+            <input id="addEventNumber" disabled placeholder="Auto-generated" />
+          </div>
+          <div class="field">
+            <label>Status Number</label>
+            <input id="addStatusNumber" disabled placeholder="Auto-generated" />
+          </div>
+        </div>
+        <div class="field"><label>Category</label><select id="addEventCategory"></select></div>
+        <div class="field"><label>Status</label><select id="addEventStatus"></select></div>
+        <div class="field"><label>Notes</label><textarea id="addEventNotes" placeholder="Describe the issue…"></textarea></div>
+        <div class="field"><label>Admin Notes <span style="font-weight:400;text-transform:none;letter-spacing:0;">(internal only)</span></label><textarea id="addEventAdminNotes" placeholder="Internal notes, not visible to customers…"></textarea></div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 0 2px;">
+          <span style="font-size:11px; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:.03em;">Updated By</span>
+          <span style="font-size:13px; font-weight:500; color:var(--text-soft);">Parmis H.</span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" onclick="closeModal('addEventModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="submitAddEvent()">Add Event</button>
+    </div>
+  </div>
+</div>
+
+<!-- MANAGE EVENT MODAL -->
+<div id="manageEventModal" class="modal-backdrop">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>Update Event</h2>
+      <button class="btn-ghost btn-sm" onclick="closeModal('manageEventModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-row-2">
+          <div class="field"><label>Category</label><select id="manageEventCategory" onchange="populateManageEventNumbers()"></select></div>
+          <div class="field"><label>Event Number</label><select id="manageEventNumber" onchange="populateManageStatusNumber()"></select></div>
+        </div>
+        <div class="form-row-2">
+          <div class="field"><label>New Status Number</label><input id="manageStatusNumber" disabled placeholder="Auto-generated" /></div>
+          <div class="field"><label>Status</label><select id="manageEventStatus"></select></div>
+        </div>
+        <div class="field"><label>Notes</label><textarea id="manageEventNotes" placeholder="Describe the update…"></textarea></div>
+        <div class="field"><label>Admin Notes <span style="font-weight:400;text-transform:none;letter-spacing:0;">(internal only)</span></label><textarea id="manageEventAdminNotes" placeholder="Internal notes, not visible to customers…"></textarea></div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 0 2px;">
+          <span style="font-size:11px; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:.03em;">Updated By</span>
+          <span style="font-size:13px; font-weight:500; color:var(--text-soft);">Parmis H.</span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" onclick="closeModal('manageEventModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="submitManageEvent()">Update Event</button>
+    </div>
+  </div>
+</div>
+
+<!-- CLOSE EVENT MODAL -->
+<div id="closeEventModal" class="modal-backdrop">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>Close Event</h2>
+      <button class="btn-ghost btn-sm" onclick="closeModal('closeEventModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="form-row-2">
+          <div id="closeEventCategoryField" class="field"><label>Category</label><select id="closeEventCategory" onchange="populateCloseEventNumbers()"></select></div>
+          <div id="closeEventCategoryStatic" class="field" style="display:none;">
+            <label>Category</label>
+            <div style="height:36px; display:flex; align-items:center; font-size:13px; font-weight:600; color:var(--text); border:1px solid var(--border); border-radius:var(--radius-sm); padding:0 11px; background:var(--surface-2);" id="closeEventCategoryDisplay"></div>
+          </div>
+          <div class="field"><label>Event Number</label><select id="closeEventNumber" onchange="populateCloseStatusNumber()"></select></div>
+        </div>
+        <div class="form-row-2">
+          <div class="field">
+            <label>Status Number</label>
+            <input id="closeStatusNumber" disabled placeholder="Auto-generated" />
+          </div>
+          <div class="field">
+            <label>Status</label>
+            <input disabled value="Operational" style="background:var(--green-bg); color:var(--green); border-color:var(--green-border); font-weight:600;" />
+          </div>
+        </div>
+        <p class="helper-text">Status is always set to Operational when closing an event.</p>
+        <div class="field"><label>Closing Notes</label><textarea id="closeEventNotes" placeholder="Describe the resolution…"></textarea></div>
+        <div class="field"><label>Admin Notes <span style="font-weight:400;text-transform:none;letter-spacing:0;">(internal only)</span></label><textarea id="closeEventAdminNotes" placeholder="Internal notes, not visible to customers…"></textarea></div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 0 2px;">
+          <span style="font-size:11px; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:.03em;">Updated By</span>
+          <span style="font-size:13px; font-weight:500; color:var(--text-soft);">Parmis H.</span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" onclick="closeModal('closeEventModal')">Cancel</button>
+      <button class="btn btn-danger" onclick="submitCloseEvent()">Close Event</button>
+    </div>
+  </div>
+</div>
+
+<!-- BULK CLOSE EVENTS MODAL -->
+<div id="bulkCloseModal" class="modal-backdrop">
+  <div class="modal" style="width:min(640px,100%);">
+    <div class="modal-head">
+      <div>
+        <h2>Close Events</h2>
+        <div style="font-size:11px; color:var(--text-muted); margin-top:2px;">Deselect any events you don't want to close. One set of closing notes applies to all selected.</div>
+      </div>
+      <button class="btn-ghost btn-sm" onclick="closeModal('bulkCloseModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <!-- Event checklist -->
+        <div>
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+            <label style="margin:0;">Open Events</label>
+            <div style="display:flex; gap:8px;">
+              <button class="btn-ghost btn-sm" onclick="bulkSelectAll(true)" style="font-size:11px; padding:0; border:0; color:var(--accent);">Select all</button>
+              <span style="color:var(--border);">·</span>
+              <button class="btn-ghost btn-sm" onclick="bulkSelectAll(false)" style="font-size:11px; padding:0; border:0; color:var(--text-muted);">Deselect all</button>
+            </div>
+          </div>
+          <div id="bulkCloseEventList" style="display:grid; gap:6px; max-height:240px; overflow-y:auto; border:1px solid var(--border); border-radius:var(--radius-sm); padding:8px; background:var(--surface-2);"></div>
+        </div>
+        <div class="field">
+          <label>Closing Notes <span style="font-weight:400; text-transform:none; letter-spacing:0;">(applies to all selected)</span></label>
+          <textarea id="bulkCloseNotes" placeholder="Describe the resolution for all selected events…"></textarea>
+        </div>
+        <div class="field">
+          <label>Admin Notes <span style="font-weight:400; text-transform:none; letter-spacing:0;">(internal only)</span></label>
+          <textarea id="bulkCloseAdminNotes" placeholder="Internal notes, not visible to customers…"></textarea>
+        </div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:4px 0 2px;">
+          <span style="font-size:10px; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:.04em;">Updated By</span>
+          <span style="font-size:12px; font-weight:500; color:var(--text-soft);">Parmis H.</span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <div style="font-size:11px; color:var(--text-muted); flex:1;" id="bulkCloseCount">0 events selected</div>
+      <button class="btn" onclick="closeModal('bulkCloseModal')">Cancel</button>
+      <button class="btn btn-danger" onclick="submitBulkClose()">Close Selected Events</button>
+    </div>
+  </div>
+</div>
+
+<!-- QUICK CLOSE EVENT MODAL (from row) -->
+<div id="quickCloseModal" class="modal-backdrop">
+  <div class="modal">
+    <div class="modal-head">
+      <div>
+        <h2>Close Event</h2>
+        <div style="font-size:12px; color:var(--text-muted); margin-top:2px;">
+          Event <span id="quickCloseEventNum" class="mono" style="font-size:11px;"></span> · 
+          New Status # <span id="quickCloseStatusNum" class="mono" style="font-size:11px;"></span> · 
+          Status locked to <span style="color:var(--green); font-weight:600;">Operational</span>
+        </div>
+      </div>
+      <button class="btn-ghost btn-sm" onclick="closeModal('quickCloseModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="field"><label>Closing Notes</label><textarea id="quickCloseNotes" placeholder="Describe the resolution…"></textarea></div>
+        <div class="field"><label>Admin Notes <span style="font-weight:400;text-transform:none;letter-spacing:0;">(internal only)</span></label><textarea id="quickCloseAdminNotes" placeholder="Internal notes, not visible to customers…"></textarea></div>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:6px 0 2px;">
+          <span style="font-size:11px; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:.03em;">Updated By</span>
+          <span style="font-size:13px; font-weight:500; color:var(--text-soft);">Parmis H.</span>
+        </div>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" onclick="closeModal('quickCloseModal')">Cancel</button>
+      <button class="btn btn-danger" onclick="submitQuickClose()">Close Event</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD CATEGORY MODAL -->
+<div id="categoryModal" class="modal-backdrop">
+  <div class="modal">
+    <div class="modal-head">
+      <h2>Add Category</h2>
+      <button class="btn-ghost btn-sm" onclick="closeModal('categoryModal')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="field"><label>Category Name</label><input id="newCategoryName" placeholder="e.g. Mobile App" /></div>
+        <p class="helper-text">New categories start with no active events and show Operational by default.</p>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn" onclick="closeModal('categoryModal')">Cancel</button>
+      <button class="btn btn-primary" onclick="addCategory()">Add Category</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ── DATA MODEL ──────────────────────────────────────────────────────────────
+
+  const FIXED_CATEGORIES = ['Dashboard','Portfolio','Alerts','Devices','Site Overview','Client View','Kiosk View','Charting','Reporting','Data Ingestion','Site Access','API'];
+
+  let customCategories = [];
+  let archivedCategories = []; // stores names of all archived categories (fixed or custom)
+  function allCategories() {
+    const custom = customCategories.filter(c => !archivedCategories.includes(c.name)).map(c => c.name);
+    return [...FIXED_CATEGORIES.filter(c => !archivedCategories.includes(c)), ...custom];
+  }
+
+  const STATUS_DEFS = [
+    { id:'working', label:'Operational', severity:'working', color:'working', icon:'✓', banner:'All systems are operating normally.' },
+    { id:'limited', label:'Limited Operations', severity:'limited', color:'limited', icon:'!', banner:'Some platform features are experiencing limited functionality.' },
+    { id:'down', label:'Not Operational', severity:'down', color:'down', icon:'⊗', banner:'Platform is currently unavailable. Our team is working to restore services.' },
+  ];
+
+  function getStatusDef(id) { return STATUS_DEFS.find(s => s.id === id) || STATUS_DEFS[0]; }
+  function severityOf(id) { const s = getStatusDef(id); return s.severity; }
+
+  // Events: { id, eventNumber, category, statusUpdates: [{statusNumber, status, notes, adminNotes, updatedBy, timestamp}], closed, closingNotes, closingAdminNotes, closedAt, closedBy }
+  let events = [
+    {
+      id: 'evt_1',
+      eventNumber: '001',
+      category: 'Dashboard',
+      closed: false,
+      closingNotes: '',
+      closingAdminNotes: '',
+      closedAt: null,
+      closedBy: null,
+      statusUpdates: [
+        { statusNumber: '001A', status: 'down', notes: 'Dashboard is currently unavailable. Users cannot access the main interface.', adminNotes: 'Root cause: DB connection pool exhausted. DevOps investigating.', updatedBy: 'Admin User', timestamp: '2026-05-05T08:22:00' },
+        { statusNumber: '001B', status: 'limited', notes: 'Dashboard is partially restored. Some features may be slow.', adminNotes: 'DB pool recovered. Monitoring closely.', updatedBy: 'Admin User', timestamp: '2026-05-05T10:15:00' },
+      ]
+    },
+    {
+      id: 'evt_2',
+      eventNumber: '002',
+      category: 'Site Access',
+      closed: false,
+      closingNotes: '',
+      closingAdminNotes: '',
+      closedAt: null,
+      closedBy: null,
+      statusUpdates: [
+        { statusNumber: '002A', status: 'down', notes: 'Users are unable to log in. Authentication service is down.', adminNotes: 'Auth provider outage confirmed. Ticket raised with vendor.', updatedBy: 'Admin User', timestamp: '2026-05-05T09:00:00' },
+      ]
+    },
+    {
+      id: 'evt_3',
+      eventNumber: '003',
+      category: 'Reporting',
+      closed: true,
+      closingNotes: 'Reporting service has been fully restored. All reports are generating correctly.',
+      closingAdminNotes: 'Resolved by restarting the report queue worker. Added monitoring alert.',
+      closedAt: '2026-05-05T07:30:00',
+      closedBy: 'Admin User',
+      closingStatusNumber: '003B',
+      statusUpdates: [
+        { statusNumber: '003A', status: 'limited', notes: 'Report generation is slow. Some reports may time out.', adminNotes: 'Report queue backed up. Worker scaled up.', updatedBy: 'Admin User', timestamp: '2026-05-05T06:00:00' },
+      ]
+    }
+  ];
+
+  let eventCounter = 4;
+  let autoRotate = false;
+  let rotateTimer = null;
+  let archivedOpen = false;
+
+  // ── HELPERS ──────────────────────────────────────────────────────────────────
+
+  function pad(n, len=3) { return String(n).padStart(len,'0'); }
+  function nextEventNumber() { return pad(eventCounter); }
+  function nextStatusLetter(updates) {
+    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    return letters[updates.length] || 'Z';
+  }
+
+  function formatDate(v) {
+    if (!v) return '—';
+    return new Intl.DateTimeFormat('en-US', { month:'short', day:'numeric', year:'numeric', hour:'numeric', minute:'2-digit' }).format(new Date(v));
+  }
+
+  function getOpenEvents() { return events.filter(e => !e.closed); }
+  function getOpenEventsForCategory(cat) { return events.filter(e => !e.closed && e.category === cat); }
+
+  function getCategoryCurrentStatus(cat) {
+    const openEvts = getOpenEventsForCategory(cat);
+    if (openEvts.length === 0) return 'working';
+    // worst status among open events
+    const statuses = openEvts.flatMap(e => e.statusUpdates.map(u => u.status));
+    if (statuses.includes('down')) return 'down';
+    if (statuses.includes('limited')) return 'limited';
+    return 'working';
+  }
+
+  function getCategoryLastEvent(cat) {
+    const openEvts = getOpenEventsForCategory(cat);
+    if (openEvts.length === 0) {
+      // find most recently closed
+      const closed = events.filter(e => e.closed && e.category === cat).sort((a,b) => new Date(b.closedAt) - new Date(a.closedAt));
+      return closed[0] || null;
+    }
+    return openEvts[openEvts.length - 1];
+  }
+
+  function getLastStatusUpdate(evt) {
+    if (!evt) return null;
+    return evt.statusUpdates[evt.statusUpdates.length - 1] || null;
+  }
+
+  function getOverallStatus() {
+    const cats = allCategories();
+    const statuses = cats.map(c => getCategoryCurrentStatus(c));
+    if (statuses.includes('down')) return 'down';
+    if (statuses.includes('limited')) return 'limited';
+    return 'working';
+  }
+
+  function statusTag(statusId) {
+    const s = getStatusDef(statusId);
+    return `<span class="tag ${s.color}">${s.label}</span>`;
+  }
+
+  function statusDot(statusId) {
+    const s = getStatusDef(statusId);
+    return `<span class="status-dot ${s.severity}"></span>`;
+  }
+
+  // ── RENDER ───────────────────────────────────────────────────────────────────
+
+  function render() {
+    renderScenarioSelect();
+    renderGlobalState();
+    renderPublicStatus();
+    renderAdminStatus();
+    renderPublicIncidents();
+    renderAdminIncidents();
+    syncNotifications();
+  }
+
+  function renderScenarioSelect() {
+    const el = document.getElementById('scenarioSelect');
+    const cur = el.value || '';
+    el.innerHTML = `<option value="">Switch Scenario</option>` +
+      STATUS_DEFS.map(s => `<option value="${s.id}" ${s.id===cur?'selected':''}>${s.label}</option>`).join('');
+    const sev = document.getElementById('adminBannerSeverity');
+    if (sev) sev.innerHTML = STATUS_DEFS.map(s => `<option value="${s.id}">${s.label}</option>`).join('');
+  }
+
+  function renderGlobalState() {
+    const overall = getOverallStatus();
+    const s = getStatusDef(overall);
+    const dt = document.getElementById('demoText');
+    dt.textContent = s.label;
+    dt.style.color = overall==='working'?'var(--green)':overall==='limited'?'var(--amber)':'var(--red)';
+    document.getElementById('lastUpdated').textContent = formatDate(new Date());
+    const bannerMsg = document.getElementById('adminBannerMessage').value || s.banner;
+    document.getElementById('bannerMessage').textContent = bannerMsg;
+    const banner = document.getElementById('globalBanner');
+    banner.className = `banner ${overall==='limited'?'limited':overall==='working'?'working':''}`;
+    const dot = document.getElementById('brandDot');
+    dot.className = `brand-dot ${overall==='working'?'':overall}`;
+  }
+
+  const expandedPublicCats = new Set();
+  function toggleCategoryPublic(cat) {
+    expandedPublicCats.has(cat) ? expandedPublicCats.delete(cat) : expandedPublicCats.add(cat);
+    renderPublicStatus();
+  }
+
+  function renderPublicStatus() {
+    const overall = getOverallStatus();
+    const s = getStatusDef(overall);
+    const icon = document.getElementById('summaryIcon');
+    icon.className = `summary-indicator ${s.severity}`; icon.textContent = s.icon;
+    const title = document.getElementById('summaryTitle');
+    title.className = `summary-label ${s.severity}`; title.textContent = s.label;
+    document.getElementById('summaryText').textContent = document.getElementById('adminBannerMessage').value || s.banner;
+
+    const cats = allCategories();
+    document.getElementById('featureStatusList').innerHTML = cats.map(cat => {
+      const statusId = getCategoryCurrentStatus(cat);
+      const sd = getStatusDef(statusId);
+      const lastEvt = getCategoryLastEvent(cat);
+      const lastUpdate = getLastStatusUpdate(lastEvt);
+      const hasOpenEvent = getOpenEventsForCategory(cat).length > 0;
+      const isExpanded = expandedPublicCats.has(cat);
+
+      let detailsHTML;
+      if (!hasOpenEvent) {
+        // No active event — operational view: STATUS | NOTES | LAST UPDATED
+        const resolvedEvt = lastEvt && lastEvt.closed ? lastEvt : null;
+        const lastUpdatedTime = resolvedEvt ? formatDate(resolvedEvt.closedAt) : formatDate(new Date());
+        detailsHTML = `
+          <div style="display:grid; grid-template-columns:160px 1fr 200px; border-top:1px solid var(--border); background:var(--surface-2);">
+            <div style="padding:12px 16px; border-right:1px solid var(--border);">
+              <div class="detail-label">Status</div>
+              <div class="status-label working" style="font-size:12px; margin-top:5px;">Operational</div>
+            </div>
+            <div style="padding:12px 16px; border-right:1px solid var(--border);">
+              <div class="detail-label">Notes</div>
+              <div class="detail-value" style="font-family:inherit; line-height:1.5; margin-top:5px;">${resolvedEvt ? resolvedEvt.closingNotes || 'Service restored.' : 'Operating normally.'}</div>
+            </div>
+            <div style="padding:12px 16px;">
+              <div class="detail-label">Last Updated</div>
+              <div class="detail-value timestamp" style="margin-top:5px;">${lastUpdatedTime}</div>
+            </div>
+          </div>`;
+      } else {
+        // Has open event — event view: STATUS | EVENT + LAST STATUS | NOTES | LAST UPDATED
+        detailsHTML = `
+          <div style="display:grid; grid-template-columns:160px 140px 1fr 180px; border-top:1px solid var(--border); background:var(--surface-2);">
+            <div style="padding:12px 16px; border-right:1px solid var(--border);">
+              <div class="detail-label">Status</div>
+              <div class="status-label ${sd.severity}" style="font-size:12px; margin-top:5px;">${sd.label}</div>
+            </div>
+            <div style="padding:12px 16px; border-right:1px solid var(--border);">
+              <div class="detail-label">Event</div>
+              <div style="margin-top:5px;"><span class="mono">${lastEvt.eventNumber}</span></div>
+              <div class="detail-label" style="margin-top:10px;">Last Status</div>
+              <div style="margin-top:4px;"><span class="mono">${lastUpdate ? lastUpdate.statusNumber : '—'}</span></div>
+            </div>
+            <div style="padding:12px 16px; border-right:1px solid var(--border);">
+              <div class="detail-label">Notes</div>
+              <div class="detail-value" style="font-family:inherit; line-height:1.5; margin-top:5px;">${lastUpdate ? lastUpdate.notes : '—'}</div>
+            </div>
+            <div style="padding:12px 16px;">
+              <div class="detail-label">Last Updated</div>
+              <div class="detail-value timestamp" style="margin-top:5px;">${lastUpdate ? formatDate(lastUpdate.timestamp) : '—'}</div>
+            </div>
+          </div>`;
+      }
+
+      return `<div class="category-card">
+        <div class="category-top" style="cursor:pointer;" onclick="toggleCategoryPublic('${cat}')">
+          <div class="category-title-wrap">${statusDot(statusId)} <span>${cat}</span></div>
+          <div class="status-label ${sd.severity}">${sd.label}</div>
+          <span style="font-size:15px; color:var(--text-muted); padding:0 4px; user-select:none;">${isExpanded ? '⌄' : '›'}</span>
+        </div>
+        ${isExpanded ? detailsHTML : ''}
+      </div>`;
+    }).join('');
+  }
+
+  function renderAdminStatus() {
+    // Clear open events summary (removed - redundant with category cards)
+    const summaryEl = document.getElementById('openEventsSummary');
+    if (summaryEl) summaryEl.innerHTML = '';
+
+    // Category cards — modern layout with event data
+    const cats = allCategories();
+    document.getElementById('adminStatusList').innerHTML = cats.map(cat => {
+      const statusId = getCategoryCurrentStatus(cat);
+      const sd = getStatusDef(statusId);
+      const openEvtsForCat = getOpenEventsForCategory(cat);
+      const lastEvt = getCategoryLastEvent(cat);
+      const lastUpdate = getLastStatusUpdate(lastEvt);
+      const hasEvent = !!lastEvt;
+      const isOpen = openEvtsForCat.length > 0;
+
+      const bodyHTML = hasEvent
+        ? `<div style="border-top:1px solid var(--border);">
+            <div style="display:grid; grid-template-columns:100px 110px 170px 1fr ${isOpen ? 'auto' : ''}; border-bottom:1px solid var(--border); align-items:center;">
+              <div style="padding:11px 16px; border-right:1px solid var(--border);">
+                <div class="detail-label">Event #</div>
+                <div style="margin-top:5px;"><span class="mono">${lastEvt.eventNumber}</span></div>
+              </div>
+              <div style="padding:11px 16px; border-right:1px solid var(--border);">
+                <div class="detail-label">Status #</div>
+                <div style="margin-top:5px;"><span class="mono">${lastUpdate ? lastUpdate.statusNumber : lastEvt.closed ? 'CLOSED' : '—'}</span></div>
+              </div>
+              <div style="padding:11px 16px; border-right:1px solid var(--border);">
+                <div class="detail-label">Status</div>
+                <div style="margin-top:5px;" class="status-label ${sd.severity}">${sd.label}</div>
+              </div>
+              <div style="padding:11px 16px; ${isOpen ? 'border-right:1px solid var(--border);' : ''}">
+                <div class="detail-label">Last Updated</div>
+                <div style="margin-top:5px; font-size:12px; color:var(--text-muted);">${lastUpdate ? formatDate(lastUpdate.timestamp) : lastEvt.closed ? formatDate(lastEvt.closedAt) : '—'}</div>
+              </div>
+              ${isOpen ? `<div style="padding:11px 16px;">
+                <button class="btn btn-sm btn-danger" onclick="openQuickCloseModal('${lastEvt.id}')">Close Event</button>
+              </div>` : ''}
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; border-top:0;">
+              <div style="padding:11px 16px; border-right:1px solid var(--border);">
+                <div class="detail-label">Notes <span style="font-weight:400; text-transform:none; letter-spacing:0; font-size:10px; color:var(--text-muted);">(customer-facing)</span></div>
+                <div style="margin-top:5px; font-size:12px; color:var(--text-soft); line-height:1.5;">${lastEvt.closed ? lastEvt.closingNotes || '—' : (lastUpdate ? lastUpdate.notes || '—' : '—')}</div>
+              </div>
+              <div style="padding:11px 16px; background:var(--amber-bg);">
+                <div class="detail-label" style="color:var(--amber);">Admin Notes <span style="font-weight:400; text-transform:none; letter-spacing:0; font-size:10px;">⚑ internal only</span></div>
+                <div style="margin-top:5px; font-size:12px; color:var(--text-soft); line-height:1.5;">${lastEvt.closed ? lastEvt.closingAdminNotes || '—' : (lastUpdate ? lastUpdate.adminNotes || '—' : '—')}</div>
+              </div>
+            </div>
+          </div>`
+        : `<div style="border-top:1px solid var(--border);">
+            <div style="display:grid; grid-template-columns:100px 110px 170px 1fr;">
+              <div style="padding:11px 16px; border-right:1px solid var(--border);">
+                <div class="detail-label">Event #</div>
+                <div style="margin-top:5px; font-size:12px; color:var(--text-muted);">—</div>
+              </div>
+              <div style="padding:11px 16px; border-right:1px solid var(--border);">
+                <div class="detail-label">Status #</div>
+                <div style="margin-top:5px; font-size:12px; color:var(--text-muted);">—</div>
+              </div>
+              <div style="padding:11px 16px; border-right:1px solid var(--border);">
+                <div class="detail-label">Status</div>
+                <div style="margin-top:5px;" class="status-label working">Operational</div>
+              </div>
+              <div style="padding:11px 16px;">
+                <div class="detail-label">Last Updated</div>
+                <div style="margin-top:5px; font-size:12px; color:var(--text-muted);">${formatDate(new Date())}</div>
+              </div>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr;">
+              <div style="padding:11px 16px; border-right:1px solid var(--border); border-top:1px solid var(--border);">
+                <div class="detail-label">Notes <span style="font-weight:400; text-transform:none; letter-spacing:0; font-size:10px; color:var(--text-muted);">(customer-facing)</span></div>
+                <div style="margin-top:5px; font-size:12px; color:var(--text-muted);">Operating normally.</div>
+              </div>
+              <div style="padding:11px 16px; background:var(--amber-bg); border-top:1px solid var(--border);">
+                <div class="detail-label" style="color:var(--amber);">Admin Notes <span style="font-weight:400; text-transform:none; letter-spacing:0; font-size:10px;">⚑ internal only</span></div>
+                <div style="margin-top:5px; font-size:12px; color:var(--text-muted);">—</div>
+              </div>
+            </div>
+          </div>`;
+
+      return `<div style="border:1px solid var(--border); border-radius:var(--radius); background:var(--surface); box-shadow:var(--shadow-sm); overflow:hidden;">
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 16px; background:var(--surface-2);">
+          <div style="display:flex; align-items:center; gap:8px; font-weight:600; font-size:13px;">
+            ${statusDot(statusId)} ${cat}
+          </div>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <button class="btn btn-ghost btn-sm" style="color:var(--text-muted); font-size:12px;" onclick="archiveCategoryByName('${cat}')">Archive</button>
+          </div>
+        </div>
+        ${bodyHTML}
+      </div>`;
+    }).join('');
+
+    // Archived categories (both fixed and custom)
+    const archived = archivedCategories;
+    if (archived.length > 0) {
+      const isOpen = archivedOpen;
+      document.getElementById('adminStatusList').innerHTML += `
+        <div class="archived-section">
+          <button class="archived-toggle ${isOpen?'open':''}" id="archivedToggle" onclick="toggleArchivedSection()">
+            <span class="archived-toggle-icon">›</span>
+            Archived <span class="archived-badge">${archived.length}</span>
+          </button>
+          <div class="archived-list ${isOpen?'open':''}" id="archivedList">
+            ${archived.map(name => `<div class="archived-card">
+              <div><div class="archived-card-name">${name}</div></div>
+              <div class="archived-actions">
+                <button class="btn btn-sm" onclick="restoreCategoryByName('${name}')">Restore</button>
+                <button class="btn btn-sm btn-danger" onclick="permanentlyDeleteCategoryByName('${name}')">Delete permanently</button>
+              </div>
+            </div>`).join('')}
+          </div>
+        </div>`;
+    }
+  }
+
+  function renderPublicIncidents() {
+    const container = document.getElementById('publicIncidentContainer');
+    // Only show closed events (completed incidents) — never show open/ongoing as operational
+    const closedEvents = events.filter(e => e.statusUpdates.length > 0 && e.closed);
+
+    if (closedEvents.length === 0) {
+      container.innerHTML = `<div class="table-card" style="padding:24px; text-align:center; color:var(--text-muted); font-size:13px;">No incidents recorded.</div>`;
+      return;
+    }
+
+    const grouped = {};
+    closedEvents.forEach(e => {
+      if (!grouped[e.category]) grouped[e.category] = [];
+      grouped[e.category].push(e);
+    });
+
+    container.innerHTML = Object.entries(grouped).map(([cat, catEvents]) => {
+      const rows = catEvents.map(evt => {
+        const firstUpdate = evt.statusUpdates[0]; // initial status
+        if (!firstUpdate) return '';
+
+        return `<tr>
+          <td><span class="mono">${evt.eventNumber}</span></td>
+          <td>${statusTag(firstUpdate.status)}</td>
+          <td class="timestamp">${formatDate(firstUpdate.timestamp)}</td>
+          <td class="timestamp">${formatDate(evt.closedAt)}</td>
+          <td style="color:var(--text-soft); max-width:280px; line-height:1.5;">${evt.closingNotes || '—'}</td>
+        </tr>`;
+      }).join('');
+
+      if (!rows) return '';
+
+      return `<div style="margin-bottom:20px;">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px; padding-bottom:8px; border-bottom:2px solid var(--border);">
+          <span style="font-size:13px; font-weight:700; color:var(--text);">${cat}</span>
+          <span style="font-size:11px; color:var(--text-muted);">${catEvents.length} incident${catEvents.length>1?'s':''}</span>
+        </div>
+        <div class="table-card">
+          <table>
+            <thead><tr><th>Event #</th><th>Status</th><th>Opened</th><th>Closed</th><th>Notes</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+      </div>`;
+    }).filter(Boolean).join('');
+
+    if (!container.innerHTML) {
+      container.innerHTML = `<div class="table-card" style="padding:24px; text-align:center; color:var(--text-muted); font-size:13px;">No incidents recorded.</div>`;
+    }
+  }
+
+  function renderAdminIncidents() {
+    const container = document.getElementById('adminIncidentContainer');
+    if (events.length === 0) {
+      container.innerHTML = `<div style="border:1px dashed var(--border); border-radius:var(--radius); padding:24px; text-align:center; color:var(--text-muted); font-size:13px; background:var(--surface-2);">No events recorded yet.</div>`;
+      return;
+    }
+
+    // Group by category
+    const grouped = {};
+    events.forEach(e => {
+      if (!grouped[e.category]) grouped[e.category] = [];
+      grouped[e.category].push(e);
+    });
+
+    container.innerHTML = Object.entries(grouped).map(([cat, catEvents]) => {
+      const eventsHTML = catEvents.map(evt => {
+        const trailRows = evt.statusUpdates.map((upd, idx) => {
+          const isLastUpdate = idx === evt.statusUpdates.length - 1;
+          const nextUpd = evt.statusUpdates[idx + 1];
+          // "Closed" for a status row = when next status was opened (or when event closed if last)
+          const closedTime = nextUpd ? nextUpd.timestamp : (isLastUpdate && evt.closed ? evt.closedAt : null);
+          return `
+          <div class="inc-status-row">
+            <div><span class="mono">${upd.statusNumber}</span></div>
+            <div>${statusTag(upd.status)}</div>
+            <div>
+              <div style="color:var(--text-soft); line-height:1.5; margin-bottom:${upd.adminNotes?'6px':'0'};">${upd.notes || '—'}</div>
+              ${upd.adminNotes ? `<div class="admin-notes-cell">⚑ Admin <span class="admin-only-badge">INTERNAL</span><div style="margin-top:3px;">${upd.adminNotes}</div></div>` : ''}
+            </div>
+            <div style="color:var(--text-muted); font-size:11px;">${upd.updatedBy}</div>
+            <div class="timestamp">${formatDate(upd.timestamp)}</div>
+            <div class="timestamp">${closedTime ? formatDate(closedTime) : '<span style="color:var(--text-muted);">—</span>'}</div>
+          </div>`;
+        }).join('');
+
+        const closeRow = evt.closed ? `
+          <div class="inc-status-row close-row">
+            <div><span class="mono" style="background:var(--green-bg); color:var(--green); border-color:var(--green-border);">${evt.closingStatusNumber || 'CLOSED'}</span></div>
+            <div>${statusTag('working')}</div>
+            <div>
+              <div style="color:var(--text-soft); line-height:1.5; margin-bottom:${evt.closingAdminNotes?'6px':'0'};">
+                <strong style="font-size:11px; text-transform:uppercase; letter-spacing:.04em; color:var(--text-muted);">Closing Notes</strong><br>${evt.closingNotes || '—'}
+              </div>
+              ${evt.closingAdminNotes ? `<div class="admin-notes-cell">⚑ Admin <span class="admin-only-badge">INTERNAL</span><div style="margin-top:3px;">${evt.closingAdminNotes}</div></div>` : ''}
+            </div>
+            <div style="color:var(--text-muted); font-size:11px;">${evt.closedBy || '—'}</div>
+            <div class="timestamp">${formatDate(evt.closedAt)}</div>
+            <div class="timestamp">${formatDate(evt.closedAt)}</div>
+          </div>` : '';
+
+        return `<div class="inc-event">
+          <div class="inc-event-header">
+            <div class="inc-event-id">
+              <span class="mono" style="font-size:13px;">${evt.eventNumber}</span>
+              <span style="font-size:13px; font-weight:600; color:var(--text);">${cat}</span>
+              ${evt.closed && evt.closingNotes ? '<span class="tag closed">Closed</span>' : ''}
+            </div>
+            <div class="inc-event-meta">
+              ${evt.statusUpdates.length} status update${evt.statusUpdates.length!==1?'s':''}
+            </div>
+          </div>
+          <div class="inc-trail-head">
+            <span>Status #</span><span>Status</span><span>Notes</span><span>Updated By</span><span>Opened</span><span>Closed</span>
+          </div>
+          <div class="inc-status-trail">
+            ${trailRows}
+            ${closeRow}
+          </div>
+        </div>`;
+      }).join('');
+
+      return `<div class="inc-group">
+        <div class="inc-group-header">
+          <span class="inc-group-title">${cat}</span>
+          <span style="font-size:11px; color:var(--text-muted);">${catEvents.length} event${catEvents.length>1?'s':''}</span>
+        </div>
+        ${eventsHTML}
+      </div>`;
+    }).join('');
+  }
+
+  function syncNotifications() {
+    const overall = getOverallStatus();
+    const s = getStatusDef(overall);
+    const el = document.getElementById('notificationStatus');
+    const annLabel = document.getElementById('notifAnnLabel');
+    const annText = document.getElementById('notifAnnText');
+    if (!el) return;
+    const cls = overall==='working'?'operational':overall==='limited'?'limited':'outage';
+    el.className = `notification-status ${cls}`;
+    el.textContent = `${s.icon} ${s.label}`;
+    annLabel.className = `notification-ann-label ${cls}`;
+    annText.textContent = document.getElementById('adminBannerMessage').value || s.banner;
+  }
+
+  // ── MODAL HELPERS ────────────────────────────────────────────────────────────
+
+  function openModal(id) {
+    if (id === 'addEventModal') {
+      const num = nextEventNumber();
+      document.getElementById('addEventNumber').value = num;
+      document.getElementById('addStatusNumber').value = `${num}A`;
+      const cat = document.getElementById('addEventCategory');
+      cat.innerHTML = allCategories().map(c => `<option>${c}</option>`).join('');
+      const st = document.getElementById('addEventStatus');
+      st.innerHTML = STATUS_DEFS.filter(s => s.id !== 'working').map(s => `<option value="${s.id}">${s.label}</option>`).join('');
+      document.getElementById('addEventNotes').value = '';
+      document.getElementById('addEventAdminNotes').value = '';
+    }
+    if (id === 'manageEventModal') {
+      const openEvts = getOpenEvents();
+      const catSel = document.getElementById('manageEventCategory');
+      const openCats = [...new Set(openEvts.map(e => e.category))];
+      catSel.innerHTML = openCats.length === 0 ? '<option value="">No open events</option>' : openCats.map(c => `<option>${c}</option>`).join('');
+      populateManageEventNumbers();
+      const st = document.getElementById('manageEventStatus');
+      st.innerHTML = STATUS_DEFS.filter(s => s.id !== 'working').map(s => `<option value="${s.id}">${s.label}</option>`).join('');
+      document.getElementById('manageEventNotes').value = '';
+      document.getElementById('manageEventAdminNotes').value = '';
+    }
+    if (id === 'closeEventModal') {
+      const openEvts = getOpenEvents();
+      const catSel = document.getElementById('closeEventCategory');
+      const openCats = [...new Set(openEvts.map(e => e.category))];
+      catSel.innerHTML = openCats.length === 0 ? '<option value="">No open events</option>' : openCats.map(c => `<option>${c}</option>`).join('');
+      // Reset to show dropdown (top bar flow)
+      document.getElementById('closeEventCategoryField').style.display = 'block';
+      document.getElementById('closeEventCategoryStatic').style.display = 'none';
+      populateCloseEventNumbers();
+      document.getElementById('closeEventNotes').value = '';
+      document.getElementById('closeEventAdminNotes').value = '';
+    }
+    document.getElementById(id).classList.add('active');
+  }
+
+  function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+  function populateManageEventNumbers() {
+    const cat = document.getElementById('manageEventCategory').value;
+    const openEvts = getOpenEvents().filter(e => e.category === cat);
+    const sel = document.getElementById('manageEventNumber');
+    sel.innerHTML = openEvts.map(e => `<option value="${e.id}">${e.eventNumber}</option>`).join('') || '<option value="">None</option>';
+    populateManageStatusNumber();
+  }
+
+  function populateManageStatusNumber() {
+    const evtId = document.getElementById('manageEventNumber').value;
+    const evt = events.find(e => e.id === evtId);
+    if (!evt) return;
+    const nextLetter = nextStatusLetter(evt.statusUpdates);
+    document.getElementById('manageStatusNumber').value = `${evt.eventNumber}${nextLetter}`;
+  }
+
+  let quickCloseEventId = null;
+
+  function openQuickCloseModal(evtId) {
+    const evt = events.find(e => e.id === evtId);
+    if (!evt) return;
+    quickCloseEventId = evtId;
+    const nextLetter = nextStatusLetter(evt.statusUpdates);
+    const closingStatusNum = `${evt.eventNumber}${nextLetter}`;
+    document.getElementById('quickCloseEventNum').textContent = evt.eventNumber;
+    document.getElementById('quickCloseStatusNum').textContent = closingStatusNum;
+    document.getElementById('quickCloseNotes').value = '';
+    document.getElementById('quickCloseAdminNotes').value = '';
+    document.getElementById('quickCloseModal').classList.add('active');
+  }
+
+  function submitQuickClose() {
+    const evt = events.find(e => e.id === quickCloseEventId);
+    if (!evt) return;
+    const nextLetter = nextStatusLetter(evt.statusUpdates);
+    const closingStatusNumber = `${evt.eventNumber}${nextLetter}`;
+    const closingNotes = document.getElementById('quickCloseNotes').value.trim();
+    const closingAdminNotes = document.getElementById('quickCloseAdminNotes').value.trim();
+    const now = new Date().toISOString();
+    evt.closed = true;
+    evt.closingNotes = closingNotes;
+    evt.closingAdminNotes = closingAdminNotes;
+    evt.closedAt = now;
+    evt.closedBy = 'Parmis H.';
+    evt.closingStatusNumber = closingStatusNumber;
+    closeModal('quickCloseModal');
+    render();
+  }
+  function openBulkCloseModal() {
+    const openEvts = getOpenEvents();
+    if (openEvts.length === 0) { alert('No open events to close.'); return; }
+    const list = document.getElementById('bulkCloseEventList');
+    list.innerHTML = openEvts.map(evt => {
+      const lastUpdate = getLastStatusUpdate(evt);
+      return `<label style="display:flex; align-items:center; gap:10px; padding:8px 10px; border-radius:var(--radius-sm); cursor:pointer; background:var(--surface); border:1px solid var(--border);">
+        <input type="checkbox" class="bulk-evt-check" data-evt-id="${evt.id}" checked style="width:14px; height:14px; accent-color:var(--accent); flex-shrink:0;" onchange="updateBulkCount()">
+        <div style="flex:1; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+          <span class="mono">${evt.eventNumber}</span>
+          <span style="font-size:12px; font-weight:600; color:var(--text);">${evt.category}</span>
+          ${statusTag(lastUpdate ? lastUpdate.status : 'down')}
+          <span style="font-size:11px; color:var(--text-muted);">${lastUpdate ? formatDate(lastUpdate.timestamp) : ''}</span>
+        </div>
+      </label>`;
+    }).join('');
+    document.getElementById('bulkCloseNotes').value = '';
+    document.getElementById('bulkCloseAdminNotes').value = '';
+    updateBulkCount();
+    document.getElementById('bulkCloseModal').classList.add('active');
+  }
+
+  function updateBulkCount() {
+    const checked = document.querySelectorAll('.bulk-evt-check:checked').length;
+    const el = document.getElementById('bulkCloseCount');
+    if (el) el.textContent = `${checked} event${checked !== 1 ? 's' : ''} selected`;
+  }
+
+  function bulkSelectAll(state) {
+    document.querySelectorAll('.bulk-evt-check').forEach(cb => cb.checked = state);
+    updateBulkCount();
+  }
+
+  function submitBulkClose() {
+    const selected = [...document.querySelectorAll('.bulk-evt-check:checked')].map(cb => cb.dataset.evtId);
+    if (selected.length === 0) { alert('No events selected.'); return; }
+    const closingNotes = document.getElementById('bulkCloseNotes').value.trim();
+    const closingAdminNotes = document.getElementById('bulkCloseAdminNotes').value.trim();
+    const now = new Date().toISOString();
+    selected.forEach(evtId => {
+      const evt = events.find(e => e.id === evtId);
+      if (!evt || evt.closed) return;
+      const nextLetter = nextStatusLetter(evt.statusUpdates);
+      evt.closed = true;
+      evt.closingNotes = closingNotes;
+      evt.closingAdminNotes = closingAdminNotes;
+      evt.closedAt = now;
+      evt.closedBy = 'Parmis H.';
+      evt.closingStatusNumber = `${evt.eventNumber}${nextLetter}`;
+    });
+    closeModal('bulkCloseModal');
+    render();
+  }
+
+  function openCloseEventForCategory(cat) {
+    openModal('closeEventModal');
+    const catSel = document.getElementById('closeEventCategory');
+    const catDisplay = document.getElementById('closeEventCategoryDisplay');
+    const catField = document.getElementById('closeEventCategoryField');
+    if (catSel && catDisplay && catField) {
+      catSel.value = cat;
+      catDisplay.textContent = cat;
+      catField.style.display = 'none';
+      document.getElementById('closeEventCategoryStatic').style.display = 'block';
+      populateCloseEventNumbers();
+    }
+  }
+
+  function populateCloseEventNumbers() {
+    const cat = document.getElementById('closeEventCategory').value;
+    const openEvts = getOpenEvents().filter(e => e.category === cat);
+    const sel = document.getElementById('closeEventNumber');
+    sel.innerHTML = openEvts.map(e => `<option value="${e.id}">${e.eventNumber}</option>`).join('') || '<option value="">None</option>';
+    populateCloseStatusNumber();
+  }
+
+  function populateCloseStatusNumber() {
+    const evtId = document.getElementById('closeEventNumber').value;
+    const evt = events.find(e => e.id === evtId);
+    if (!evt) { document.getElementById('closeStatusNumber').value = ''; return; }
+    const nextLetter = nextStatusLetter(evt.statusUpdates);
+    document.getElementById('closeStatusNumber').value = `${evt.eventNumber}${nextLetter}`;
+  }
+
+  // ── ACTIONS ──────────────────────────────────────────────────────────────────
+
+  function submitAddEvent() {
+    const cat = document.getElementById('addEventCategory').value;
+    const status = document.getElementById('addEventStatus').value;
+    const notes = document.getElementById('addEventNotes').value.trim();
+    const adminNotes = document.getElementById('addEventAdminNotes').value.trim();
+    const updatedBy = 'Parmis H.';
+    const evtNum = pad(eventCounter++);
+    const now = new Date().toISOString();
+    events.unshift({
+      id: `evt_${Date.now()}`,
+      eventNumber: evtNum,
+      category: cat,
+      closed: false,
+      closingNotes: '',
+      closingAdminNotes: '',
+      closedAt: null,
+      closedBy: null,
+      statusUpdates: [{ statusNumber: `${evtNum}A`, status, notes, adminNotes, updatedBy, timestamp: now }]
+    });
+    document.getElementById('globalBanner').classList.remove('hidden');
+    closeModal('addEventModal');
+    render();
+  }
+
+  function submitManageEvent() {
+    const evtId = document.getElementById('manageEventNumber').value;
+    const evt = events.find(e => e.id === evtId);
+    if (!evt) return;
+    const status = document.getElementById('manageEventStatus').value;
+    const notes = document.getElementById('manageEventNotes').value.trim();
+    const adminNotes = document.getElementById('manageEventAdminNotes').value.trim();
+    const updatedBy = 'Parmis H.';
+    const nextLetter = nextStatusLetter(evt.statusUpdates);
+    const statusNumber = `${evt.eventNumber}${nextLetter}`;
+    evt.statusUpdates.push({ statusNumber, status, notes, adminNotes, updatedBy, timestamp: new Date().toISOString() });
+    closeModal('manageEventModal');
+    render();
+  }
+
+  function submitCloseEvent() {
+    const evtId = document.getElementById('closeEventNumber').value;
+    const evt = events.find(e => e.id === evtId);
+    if (!evt) return;
+    const closingNotes = document.getElementById('closeEventNotes').value.trim();
+    const closingAdminNotes = document.getElementById('closeEventAdminNotes').value.trim();
+    const closedBy = 'Parmis H.';
+    const closingStatusNumber = document.getElementById('closeStatusNumber').value;
+    const now = new Date().toISOString();
+    evt.closed = true;
+    evt.closingNotes = closingNotes;
+    evt.closingAdminNotes = closingAdminNotes;
+    evt.closedAt = now;
+    evt.closedBy = closedBy;
+    evt.closingStatusNumber = closingStatusNumber;
+    closeModal('closeEventModal');
+    render();
+  }
+
+  function addCategory() {
+    const name = document.getElementById('newCategoryName').value.trim();
+    if (!name) return;
+    if (allCategories().includes(name)) { alert('Category already exists.'); return; }
+    customCategories.push({ name });
+    document.getElementById('newCategoryName').value = '';
+    closeModal('categoryModal');
+    render();
+  }
+
+  function toggleArchivedSection() {
+    archivedOpen = !archivedOpen;
+    renderAdminStatus();
+  }
+
+  function archiveCategoryByName(name) {
+    if (!archivedCategories.includes(name)) archivedCategories.push(name);
+    archivedOpen = true; // auto-open archived section so user sees where it went
+    render();
+  }
+
+  function restoreCategoryByName(name) {
+    archivedCategories = archivedCategories.filter(n => n !== name);
+    render();
+  }
+
+  function permanentlyDeleteCategoryByName(name) {
+    if (!confirm(`Permanently delete "${name}"? This cannot be undone.`)) return;
+    archivedCategories = archivedCategories.filter(n => n !== name);
+    customCategories = customCategories.filter(c => c.name !== name);
+    render();
+  }
+
+  function restoreCategory(name) { restoreCategoryByName(name); }
+  function permanentlyDeleteCategory(name) { permanentlyDeleteCategoryByName(name); }
+
+  function saveBanner() { render(); }
+  function clearBanner() { document.getElementById('adminBannerMessage').value = ''; hideBanner(); render(); }
+  function hideBanner() { document.getElementById('globalBanner').classList.add('hidden'); }
+
+  function switchScenario(value) {
+    if (!value) return;
+    // Simulate by adding a demo event
+    const cats = allCategories();
+    const now = new Date().toISOString();
+    if (value === 'working') {
+      // Close all open events
+      events.filter(e => !e.closed).forEach(e => {
+        e.closed = true; e.closingNotes = 'All systems restored.'; e.closedAt = now; e.closedBy = 'Demo';
+      });
+    } else {
+      const cat = cats[0];
+      const evtNum = pad(eventCounter++);
+      events.unshift({ id:`demo_${Date.now()}`, eventNumber:evtNum, category:cat, closed:false, closingNotes:'', closingAdminNotes:'', closedAt:null, closedBy:null,
+        statusUpdates:[{ statusNumber:`${evtNum}A`, status:value, notes:`Demo: ${getStatusDef(value).label}`, adminNotes:'Auto-generated demo event.', updatedBy:'Demo', timestamp:now }]
+      });
+    }
+    document.getElementById('globalBanner').classList.remove('hidden');
+    render();
+  }
+
+  function toggleNotifications(force) {
+    const panel = document.getElementById('notificationPanel');
+    const bell = document.querySelector('.bell');
+    const open = typeof force === 'boolean' ? force : panel.classList.contains('hidden');
+    panel.classList.toggle('hidden', !open);
+    bell.classList.toggle('active', open);
+  }
+
+  function toggleRotate() {
+    autoRotate = !autoRotate;
+    document.getElementById('rotateText').textContent = autoRotate ? 'Stop' : 'Auto Rotate';
+    if (autoRotate) {
+      const pages = ['dashboard','status','admin']; let i = 0;
+      rotateTimer = setInterval(() => { i=(i+1)%pages.length; showPage(pages[i]); }, 2600);
+    } else { clearInterval(rotateTimer); }
+  }
+
+  function showPage(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    document.getElementById(pageId).classList.add('active');
+    document.querySelector(`[data-page="${pageId}"]`).classList.add('active');
+  }
+
+  document.querySelectorAll('.nav-item').forEach(b => b.addEventListener('click', () => showPage(b.dataset.page)));
+  document.querySelectorAll('.tab').forEach(b => b.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.admin-tab').forEach(t => t.classList.add('hidden'));
+    b.classList.add('active');
+    document.getElementById(`${b.dataset.adminTab}Tab`).classList.remove('hidden');
+  }));
+  document.addEventListener('click', e => {
+    const panel = document.getElementById('notificationPanel');
+    const bell = document.querySelector('.bell');
+    if (!panel.classList.contains('hidden') && !panel.contains(e.target) && !bell.contains(e.target)) toggleNotifications(false);
+  });
+
+  render();
+</script>
+</body>
+</html>
